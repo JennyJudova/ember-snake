@@ -1,20 +1,19 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { computed } from '@ember/object';
-import { later } from '@ember/runloop';
 
 export default class SnakeComponent extends Component {
-  isPlaying = false;
-
-  currentSnake = [2, 1, 0];
-  squares = [];
-  appleIndex = 0;
-  direction = 1;
-
   speed = 200;
   width = 20;
   hight = 20;
+
+  interval = null;
+  isPlaying = false;
+  squares = [];
+
+  @tracked currentSnake = [2, 1, 0];
+  @tracked appleIndex = 0;
+  @tracked direction = 1;
 
   get grid() {
     for (let i = 0; i < this.width * this.hight; i++) {
@@ -34,10 +33,6 @@ export default class SnakeComponent extends Component {
     this.randomApple()
   }
 
-  // countdown() {
-  //   console.log('countdown this', this);
-  // }
-
   randomApple() {
     do {
       this.appleIndex = Math.floor(Math.random() * this.squares.length)
@@ -53,6 +48,8 @@ export default class SnakeComponent extends Component {
       (this.currentSnake[0] - this.width < 0 && this.direction === -this.width) ||  //top
       this.squares[this.currentSnake[0] + this.direction].classList.contains('snake') //itself
     ) {
+      clearInterval(this.interval)
+      this.isPlaying = false
       return alert('game over')
     }
 
@@ -80,10 +77,7 @@ export default class SnakeComponent extends Component {
       this.isPlaying = true;
     }
 
-    this.moveOutcomes()
-
-    // keeping this bizzare example of SetInterval messing with this
-    // let interval1 = setInterval(this.countdown, 1000)
+    this.interval = setInterval(this.moveOutcomes.bind(this), this.speed);
 
     window.addEventListener('keydown', function (e) {
       if (e.keyCode === 39) {
@@ -100,8 +94,5 @@ export default class SnakeComponent extends Component {
         return
       }
     })
-
-    later(this, this.startGame, this.speed);
-    // later twiddle https://ember-twiddle.com/b6230aab046ec37e43b15334930f0427?numColumns=2&openFiles=components.my-component%5C.js%2Ctemplates.components.my-component%5C.hbs
   }
 }
