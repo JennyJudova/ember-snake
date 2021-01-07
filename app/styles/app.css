@@ -1,3 +1,7 @@
+body {
+  overflow-y: hidden;
+}
+
 .game {
   align-items: center;
   display: flex;
@@ -30,3 +34,10 @@
   box-sizing: border-box;
 }
 
+.grid div.apple {
+  background-color: red;
+}
+
+.grid div.snake {
+  background-color: blue;
+}

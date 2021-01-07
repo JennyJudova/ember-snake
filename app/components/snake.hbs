@@ -1,8 +1,7 @@
 <div class="game">
   <h1>Snake Game</h1>
+  <button type="button" {{on "click" this.startGame}}> Start Game</button>
   <div class="grid">
-    {{#each this.grid as |square|}}
-    <div></div>
-    {{/each}}
+    {{#each this.grid as |square|}}{{square}}{{/each}}
   </div>
 </div>
